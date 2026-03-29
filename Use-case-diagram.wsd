@@ -1,0 +1,88 @@
+@startuml
+left to right direction
+skinparam actorStyle awesome
+skinparam packageStyle rectangle
+
+actor "Гость" as Guest
+actor "Пользователь" as User
+actor "Администратор\nсистемы" as Admin
+
+User --|> Guest
+
+rectangle "Диаграмма прецедентов пользовательской части ИС" {
+
+  usecase "Просмотр каталога" as UC_Browse
+  usecase "Фильтрация\nпо категориям" as UC_FilterCat
+  usecase "Фильтрация\nпо тегам" as UC_FilterTags
+  usecase "Отображение 3D-модели" as UC_ViewModel
+  usecase "Рендеринг модели" as UC_Render
+  usecase "Управление камерой" as UC_Camera
+  usecase "Масштабирование модели" as UC_Zoom
+
+  usecase "Регистрация пользователя" as UC_Register
+  usecase "Авторизация" as UC_Login
+  usecase "Отображение моделей\nпользователя" as UC_MyModels
+  usecase "Загрузка 3D-модели" as UC_Upload
+  usecase "Удаление 3D-модели" as UC_Delete
+  usecase "Обновление 3D-модели" as UC_Update
+  usecase "Изменение названия\nмодели" as UC_Rename
+  usecase "Управление тегами" as UC_Tags
+  usecase "Изменение прав доступа" as UC_Access
+
+  usecase "Заблокировать пользователя" as UC_Users
+  usecase "Удалить модель пользователя" as UC_Moderate
+
+  usecase "Сохранение модели в личном кабинете" as UC_Save
+  usecase "Выбор конкретной модели" as UC_ChooseModel
+}
+
+Guest -- UC_Upload
+
+User -- UC_Register
+User -- UC_Login
+User -- UC_MyModels
+User -- UC_Browse
+User -- UC_Tags
+User -- UC_Access
+User -- UC_ChooseModel
+
+Admin -- UC_Login
+Admin -- UC_Users
+Admin -- UC_Moderate
+
+UC_ViewModel ..> UC_Render : <<include>>
+UC_ViewModel ..> UC_Camera : <<include>>
+UC_ViewModel ..> UC_Zoom : <<include>>
+
+UC_Delete ..> UC_Login : <<include>>
+UC_Update ..> UC_Login : <<include>>
+UC_Rename ..> UC_Login : <<include>>
+UC_Tags ..> UC_Login : <<include>>
+UC_MyModels ..> UC_Login : <<include>>
+UC_Users ..> UC_Login : <<include>>
+UC_Moderate ..> UC_Login : <<include>>
+UC_Browse ..> UC_Login: <<include>>
+
+UC_Upload ..> UC_Save : <<extend>>
+UC_Save ..> UC_Login : <<include>>
+
+UC_Upload ..> UC_ViewModel : <<extend>>
+
+UC_Browse ..> UC_ChooseModel: <<extend>>
+
+UC_ChooseModel ..> UC_ViewModel: <<extend>>
+UC_ChooseModel ..> UC_Delete: <<extend>>
+UC_ChooseModel ..> UC_Update: <<extend>>
+UC_ChooseModel ..> UC_Rename: <<extend>>
+UC_ChooseModel ..> UC_Tags: <<extend>>
+UC_ChooseModel ..> UC_Access: <<extend>>
+
+UC_Browse ..> UC_FilterCat: <<extend>>
+UC_Browse ..> UC_FilterTags: <<extend>>
+
+UC_FilterCat ..> UC_ChooseModel: <<extend>>
+UC_FilterTags ..> UC_ChooseModel: <<extend>>
+
+UC_Moderate ..> UC_Delete: <<include>>
+
+@enduml
